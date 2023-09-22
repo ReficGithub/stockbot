@@ -29,7 +29,7 @@ epochs = 50
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
     model.add(LSTM(1000, return_sequences=True, input_shape=input_shape))
-    model.add(LSTM(1000 return_sequences=True))
+    model.add(LSTM(1000, return_sequences=True))
     model.add(LSTM(1000, return_sequences=True))
     model.add(LSTM(1000))   
     model.add(Dense(output_shape))
