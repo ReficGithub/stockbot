@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from tensorflow.keras.models import load_model, Sequential
 from tensorflow.keras.layers import LSTM, Dense
 from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolute_percentage_error
-#pip install pandas numpy math random datetime scikit-learn
+import subprocess
 
 combined_data = pd.read_csv("training_data.csv")
 val_combined = pd.read_csv("val_data.csv")
@@ -24,7 +24,8 @@ Xval = Xval[:, :30 * 6].reshape(-1, 30, 6)
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 batch_size = 32
-epochs = 75
+epochs = 50
+cycles = 5
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
@@ -60,11 +61,13 @@ def evalueer_model(model, X, y):
     mse = mean_squared_error(y, voorspellingen)
     return mae, mse, voorspellingen
 
+for _ in range(cycles):
 
-model = laden_of_maken(input_shape)
-training(model)
-sla_model_op(model, "model")
+	model = laden_of_maken(input_shape)
+	training(model)
+	sla_model_op(model, "model")
 
-mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
-print("MAE: ", {mae})
-print("MSE: ", {mse})
+	mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
+	print("MAE: ", {mae})
+	print("MSE: ", {mse})
+	subprocess.run(["python", "generate_training_data.py"], check=True)
