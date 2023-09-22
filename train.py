@@ -25,14 +25,13 @@ input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 batch_size = 32
 epochs = 15
-cycles = 10
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
-    model.add(LSTM(1000, return_sequences=True, input_shape=input_shape))
+    model.add(LSTM(5000, return_sequences=True, input_shape=input_shape))
     model.add(LSTM(1000, return_sequences=True))
-    model.add(LSTM(1000, return_sequences=True))
-    model.add(LSTM(500))   
+    model.add(LSTM(2500, return_sequences=True))
+    model.add(LSTM(750))   
     model.add(Dense(output_shape))
     return model
 
@@ -61,13 +60,11 @@ def evalueer_model(model, X, y):
     mse = mean_squared_error(y, voorspellingen)
     return mae, mse, voorspellingen
 
-for _ in range(cycles):
 
-	model = laden_of_maken(input_shape)
-	training(model)
-	sla_model_op(model, "model")
+model = laden_of_maken(input_shape)
+training(model)
+sla_model_op(model, "model")
 
-	mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
-	print("MAE: ", {mae})
-	print("MSE: ", {mse})
-	subprocess.run(["python", "generate_training_data.py"], check=True)
+mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
+print("MAE: ", {mae})
+print("MSE: ", {mse})
