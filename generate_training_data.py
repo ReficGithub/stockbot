@@ -29,6 +29,8 @@ def maak_training_set(aantal_sets, aantal_candlesticks):
 Xtrain, ytrain = maak_training_set(aantal_sets, aantal_candlesticks)
 combined_data = pd.DataFrame(np.hstack((Xtrain.reshape(Xtrain.shape[0], -1), ytrain)))
 combined_data.to_csv("training_data.csv", index=False, mode="w")
+print("Training generated.")
 Xtrain, ytrain = maak_training_set(aantal_sets, aantal_candlesticks)
 combined_data = pd.DataFrame(np.hstack((Xtrain.reshape(Xtrain.shape[0], -1), ytrain)))
 combined_data.to_csv("val_data.csv", index=False, mode="w")
+print("Validation generated.")
