@@ -3,7 +3,7 @@ import numpy as np
 import math
 import random
 
-gewenste_aantal_jaren = 7
+gewenste_aantal_jaren = 5
 aantal_candlesticks = 30
 aantal_sets = 3200
 

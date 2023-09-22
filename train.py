@@ -24,8 +24,8 @@ Xval = Xval[:, :30 * 6].reshape(-1, 30, 6)
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 batch_size = 32
-epochs = 15
-cycles = 15
+epochs = 50
+cycles = 5
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
