@@ -32,7 +32,7 @@ ytrain = ytrain / ymax
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 batch_size = 32
-epochs = 25
+epochs = 150
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
