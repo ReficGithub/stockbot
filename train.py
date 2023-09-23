@@ -23,10 +23,18 @@ Xval = val_combined.iloc[:, :-2].values
 yval = val_combined.iloc[:, -2:].values
 Xval = Xval[:, :aantal_candlesticks * 4].reshape(-1, aantal_candlesticks, 4)
 
+Xmax = Xtrain.max()
+ymax = ytrain.max()
+
+Xtrain = Xtrain / Xmax
+ytrain = ytrain / ymax
+
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 batch_size = 32
 epochs = 25
+
+
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
@@ -54,10 +62,10 @@ def training(model):
 	model.compile(loss='mean_absolute_percentage_error', optimizer='adam')
 	model.fit(Xtrain, ytrain, epochs=epochs, batch_size=batch_size)
 
-def evalueer_model(model, X, y):
+def evalueer_model(model, X, y, Xmax=Xmax, ymax=ymax):
     voorspellingen = model.predict(X)
-    voorspellingen*=10000
-    y*=10000
+    voorspellingen*=Xmax
+    y*=ymax
     mae = mean_absolute_error(y, voorspellingen)
     mse = mean_squared_error(y, voorspellingen)
     return mae, mse, voorspellingen
