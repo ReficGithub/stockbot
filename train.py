@@ -64,10 +64,10 @@ def training(model):
 
 def evalueer_model(model, X, y, Xmax=Xmax, ymax=ymax):
     voorspellingen = model.predict(X)
-    voorspellingen*=Xmax
-    y*=ymax
     mae = mean_absolute_error(y, voorspellingen)
     mse = mean_squared_error(y, voorspellingen)
+    voorspellingen*=Xmax
+    y*=ymax
     return mae, mse, voorspellingen
 
 
