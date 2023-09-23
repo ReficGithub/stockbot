@@ -13,7 +13,7 @@ import subprocess
 combined_data = pd.read_csv("training_data.csv")
 val_combined = pd.read_csv("val_data.csv")
 
-aantal_candlesticks = 10
+aantal_candlesticks = 40
 
 Xtrain = combined_data.iloc[:, :-4].values
 ytrain = combined_data.iloc[:, -4:].values
