@@ -15,11 +15,11 @@ val_combined = pd.read_csv("val_data.csv")
 
 Xtrain = combined_data.iloc[:, :-2].values
 ytrain = combined_data.iloc[:, -2:].values
-Xtrain = Xtrain[:, :30 * 5].reshape(-1, 30, 5)
+Xtrain = Xtrain[:, :30 * 4].reshape(-1, 30, 4)
 
 Xval = val_combined.iloc[:, :-2].values
 yval = val_combined.iloc[:, -2:].values
-Xval = Xval[:, :30 * 5].reshape(-1, 30, 5)
+Xval = Xval[:, :30 * 4].reshape(-1, 30, 4)
 
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
