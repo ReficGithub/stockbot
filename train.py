@@ -13,18 +13,20 @@ import subprocess
 combined_data = pd.read_csv("training_data.csv")
 val_combined = pd.read_csv("val_data.csv")
 
+aantal_candlesticks = 10
+
 Xtrain = combined_data.iloc[:, :-2].values
 ytrain = combined_data.iloc[:, -2:].values
-Xtrain = Xtrain[:, :30 * 4].reshape(-1, 30, 4)
+Xtrain = Xtrain[:, :aantal_candlesticks * 4].reshape(-1, aantal_candlesticks, 4)
 
 Xval = val_combined.iloc[:, :-2].values
 yval = val_combined.iloc[:, -2:].values
-Xval = Xval[:, :30 * 4].reshape(-1, 30, 4)
+Xval = Xval[:, :aantal_candlesticks * 4].reshape(-1, aantal_candlesticks, 4)
 
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 batch_size = 32
-epochs = 50
+epochs = 25
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
