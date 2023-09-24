@@ -10,10 +10,9 @@ from tensorflow.keras.layers import LSTM, Dense
 from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolute_percentage_error
 import subprocess
 
+aantal_candlesticks = 40
 combined_data = pd.read_csv("training_data.csv")
 val_combined = pd.read_csv("val_data.csv")
-
-aantal_candlesticks = 40
 
 Xtrain = combined_data.iloc[:, :-4].values
 ytrain = combined_data.iloc[:, -4:].values
@@ -32,7 +31,7 @@ ytrain = ytrain / ymax
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 batch_size = 32
-epochs = 150
+epochs = 25
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
