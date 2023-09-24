@@ -8,20 +8,24 @@ from datetime import datetime, timedelta
 from tensorflow.keras.models import load_model, Sequential
 from tensorflow.keras.layers import LSTM, Dense
 from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolute_percentage_error
+from tensorflow.keras.optimizers import Adam
 import subprocess
+import h5py
+
+custom_optimizer = Adam(learning_rate=0.001)
 
 aantal_candlesticks = 40
-combined_data = pd.read_csv("training_data.csv")
-val_combined = pd.read_csv("val_data.csv")
 
-Xtrain = combined_data.iloc[:, :-4].values
-ytrain = combined_data.iloc[:, -2:].values
-Xtrain = Xtrain[:, :aantal_candlesticks * 4].reshape(-1, aantal_candlesticks, 4)
+with h5py.File("training_data.h5", "r") as file:
+    # Haal de datasets uit het bestand en laad ze in variabelen
+    Xtrain = file["Xtrain"][:]
+    ytrain = file["ytrain"][:]
 
-Xval = val_combined.iloc[:, :-4].values
-yval = val_combined.iloc[:, -2:].values
-Xval = Xval[:, :aantal_candlesticks * 4].reshape(-1, aantal_candlesticks, 4)
-print(ytrain)
+with h5py.File("val_data.h5", "r") as file:
+    # Haal de datasets uit het bestand en laad ze in variabelen
+    Xval = file["Xval"][:]
+    yval = file["yval"][:]
+
 Xmax = Xtrain.max()
 ymax = ytrain.max()
 
@@ -56,7 +60,7 @@ def laden_of_maken(input_shape):
 	return model
 
 def training(model):
-	model.compile(loss='mean_absolute_percentage_error', optimizer='adam')
+	model.compile(loss='mean_absolute_percentage_error', optimizer=custom_optimizer)
 	model.fit(Xtrain, ytrain, epochs=epochs, batch_size=batch_size)
 
 def evalueer_model(model, X, y, Xmax=Xmax, ymax=ymax):
