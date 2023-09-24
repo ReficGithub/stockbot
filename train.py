@@ -32,6 +32,12 @@ ymax = ytrain.max()
 Xtrain = Xtrain / Xmax
 ytrain = ytrain / ymax
 
+Xvmax = Xval.max()
+yvmax = ymax.max()
+
+Xval = Xval / Xvmax
+yval = yval / yvmax
+
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 batch_size = 32
@@ -63,12 +69,12 @@ def training(model):
 	model.compile(loss='mean_absolute_percentage_error', optimizer=custom_optimizer)
 	model.fit(Xtrain, ytrain, epochs=epochs, batch_size=batch_size)
 
-def evalueer_model(model, X, y, Xmax=Xmax, ymax=ymax):
+def evalueer_model(model, X, y, Xmax=Xvmax, ymax=yvmax):
     voorspellingen = model.predict(X)
     mae = mean_absolute_error(y, voorspellingen)
     mse = mean_squared_error(y, voorspellingen)
-    voorspellingen*=Xmax
-    y*=ymax
+    voorspellingen *= Xvmax
+    y *= yvmax
     return mae, mse, voorspellingen
 
 
