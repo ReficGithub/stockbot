@@ -12,7 +12,7 @@ from tensorflow.keras.optimizers import Adam
 import subprocess
 import h5py
 
-custom_optimizer = Adam(learning_rate=0.001)
+custom_optimizer = Adam(learning_rate=0.0005)
 
 aantal_candlesticks = 40
 
@@ -71,10 +71,10 @@ def training(model):
 
 def evalueer_model(model, X, y, Xmax=Xvmax, ymax=yvmax):
     voorspellingen = model.predict(X)
-    mae = mean_absolute_error(y, voorspellingen)
-    mse = mean_squared_error(y, voorspellingen)
     voorspellingen *= Xvmax
     y *= yvmax
+    mae = mean_absolute_error(y, voorspellingen)
+    mse = mean_squared_error(y, voorspellingen)
     return mae, mse, voorspellingen
 
 
