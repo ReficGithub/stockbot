@@ -48,7 +48,7 @@ yval = yval / yvmax
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 
-def get_training(model, input_shape=input_shape):
+def get_training(input_shape=input_shape):
 	mappen = os.listdir("trainingfolder")
 	random.shuffle(mappen)
 	for mapp in mappen:
@@ -113,7 +113,7 @@ def evalueer_model(model, X, y, Xmax=Xvmax, ymax=yvmax):
     mse = mean_squared_error(y, voorspellingen)
     return mae, mse, voorspellingen
 
-get_training(model)
+get_training()
 
 mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
 print("MAE: ", {mae})
