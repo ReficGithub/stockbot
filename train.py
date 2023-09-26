@@ -13,10 +13,18 @@ import subprocess
 import h5py
 
 custom_optimizer = Adam(learning_rate=0.0005)
-
+batch_size = 32
+epochs = 15
 aantal_candlesticks = 40
 
-with h5py.File("training_data.h5", "r") as file:
+mappen = ['trainingfolder', 'AAPL']
+bestandsnaam = 'training_data.h5'
+bestandsnaam2 = 'val_data.h5'
+
+Xpadnaam = os.path.join(*mappen, bestandsnaam)
+ypadnaam = os.path.join(*mappen, bestandsnaam2)
+
+with h5py.File(Xpadnaam, "r") as file:
     # Haal de datasets uit het bestand en laad ze in variabelen
     Xtrain = file["Xtrain"][:]
     ytrain = file["ytrain"][:]
@@ -37,11 +45,36 @@ yvmax = ymax.max()
 
 Xval = Xval / Xvmax
 yval = yval / yvmax
-
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
-batch_size = 32
-epochs = 25
+
+def get_training(model):
+	mappen = os.listdir("trainingfolder")
+	random.shuffle(mappen)
+	for mapp in mappen:
+		Xpadnaam = os.path.join("trainingfolder", mapp, "training_data.h5")
+		with h5py.File(Xpadnaam, "r") as file:
+		    # Haal de datasets uit het bestand en laad ze in variabelen
+		    Xtrain = file["Xtrain"][:]
+		    ytrain = file["ytrain"][:]
+
+		with h5py.File("val_data.h5", "r") as file:
+		    # Haal de datasets uit het bestand en laad ze in variabelen
+		    Xval = file["Xval"][:]
+		    yval = file["yval"][:]
+
+		Xmax = Xtrain.max()
+		ymax = ytrain.max()
+
+		Xtrain = Xtrain / Xmax
+		ytrain = ytrain / ymax
+
+		Xvmax = Xval.max()
+		yvmax = ymax.max()
+
+		Xval = Xval / Xvmax
+		yval = yval / yvmax
+		training(model, Xtrain, ytrain)
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
@@ -65,7 +98,7 @@ def laden_of_maken(input_shape):
 		print("Creating model.")
 	return model
 
-def training(model):
+def training(model, Xtrain, ytrain):
 	model.compile(loss='mean_absolute_percentage_error', optimizer=custom_optimizer)
 	model.fit(Xtrain, ytrain, epochs=epochs, batch_size=batch_size)
 
@@ -79,7 +112,7 @@ def evalueer_model(model, X, y, Xmax=Xvmax, ymax=yvmax):
 
 
 model = laden_of_maken(input_shape)
-training(model)
+get_training(model)
 sla_model_op(model, "model")
 
 mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
