@@ -50,6 +50,7 @@ output_shape = ytrain.shape[1]
 
 def get_training(input_shape=input_shape):
 	mappen = os.listdir("trainingfolder")
+	mappen.remove("AAPL")
 	random.shuffle(mappen)
 	for mapp in mappen:
 		Xpadnaam = os.path.join("trainingfolder", mapp, "training_data.h5")
