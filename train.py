@@ -67,7 +67,7 @@ def get_training(input_shape=input_shape):
 		ytrain = ytrain / ymax
 
 		training(model, Xtrain, ytrain)
-		sla_model_op(model, "model")
+	sla_model_op(model, "model")
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
