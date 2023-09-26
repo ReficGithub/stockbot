@@ -53,6 +53,7 @@ def get_training(model):
 	random.shuffle(mappen)
 	for mapp in mappen:
 		Xpadnaam = os.path.join("trainingfolder", mapp, "training_data.h5")
+		print("Currently training on:",  mapp)
 		with h5py.File(Xpadnaam, "r") as file:
 		    # Haal de datasets uit het bestand en laad ze in variabelen
 		    Xtrain = file["Xtrain"][:]
