@@ -104,7 +104,7 @@ def evalueer_model(model, X, y, Xmax=Xvmax, ymax=yvmax):
     return mae, mse, voorspellingen
 
 get_training()
-
+model = load_model("model.keras")
 mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
 print("MAE: ", {mae})
 print("MSE: ", {mse})
