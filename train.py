@@ -48,7 +48,7 @@ yval = yval / yvmax
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 
-def get_training(model):
+def get_training(model, input_shape=input_shape):
 	mappen = os.listdir("trainingfolder")
 	random.shuffle(mappen)
 	for mapp in mappen:
@@ -75,7 +75,9 @@ def get_training(model):
 
 		Xval = Xval / Xvmax
 		yval = yval / yvmax
+		model = laden_of_maken(input_shape)
 		training(model, Xtrain, ytrain)
+		sla_model_op(model, "model")
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
@@ -111,10 +113,7 @@ def evalueer_model(model, X, y, Xmax=Xvmax, ymax=yvmax):
     mse = mean_squared_error(y, voorspellingen)
     return mae, mse, voorspellingen
 
-
-model = laden_of_maken(input_shape)
 get_training(model)
-sla_model_op(model, "model")
 
 mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
 print("MAE: ", {mae})
