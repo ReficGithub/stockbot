@@ -49,8 +49,8 @@ input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 
 def get_training(input_shape=input_shape):
+	model = laden_of_maken(input_shape)
 	mappen = os.listdir("trainingfolder")
-	mappen.remove("AAPL")
 	random.shuffle(mappen)
 	for mapp in mappen:
 		Xpadnaam = os.path.join("trainingfolder", mapp, "training_data.h5")
@@ -66,7 +66,6 @@ def get_training(input_shape=input_shape):
 		Xtrain = Xtrain / Xmax
 		ytrain = ytrain / ymax
 
-		model = laden_of_maken(input_shape)
 		training(model, Xtrain, ytrain)
 		sla_model_op(model, "model")
 
