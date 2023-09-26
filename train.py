@@ -59,22 +59,12 @@ def get_training(input_shape=input_shape):
 		    Xtrain = file["Xtrain"][:]
 		    ytrain = file["ytrain"][:]
 
-		with h5py.File("val_data.h5", "r") as file:
-		    # Haal de datasets uit het bestand en laad ze in variabelen
-		    Xval = file["Xval"][:]
-		    yval = file["yval"][:]
-
 		Xmax = Xtrain.max()
 		ymax = ytrain.max()
 
 		Xtrain = Xtrain / Xmax
 		ytrain = ytrain / ymax
 
-		Xvmax = Xval.max()
-		yvmax = ymax.max()
-
-		Xval = Xval / Xvmax
-		yval = yval / yvmax
 		model = laden_of_maken(input_shape)
 		training(model, Xtrain, ytrain)
 		sla_model_op(model, "model")
