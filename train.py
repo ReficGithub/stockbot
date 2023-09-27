@@ -33,18 +33,8 @@ with h5py.File("val_data.h5", "r") as file:
     # Haal de datasets uit het bestand en laad ze in variabelen
     Xval = file["Xval"][:]
     yval = file["yval"][:]
+    keys = file["keys"][:]
 
-Xmax = Xtrain.max()
-ymax = ytrain.max()
-
-Xtrain = Xtrain / Xmax
-ytrain = ytrain / ymax
-
-Xvmax = Xval.max()
-yvmax = ymax.max()
-
-Xval = Xval / Xvmax
-yval = yval / yvmax
 input_shape = (Xtrain.shape[1], Xtrain.shape[2])
 output_shape = ytrain.shape[1]
 
@@ -59,12 +49,6 @@ def get_training(input_shape=input_shape):
 		    # Haal de datasets uit het bestand en laad ze in variabelen
 		    Xtrain = file["Xtrain"][:]
 		    ytrain = file["ytrain"][:]
-
-		Xmax = Xtrain.max()
-		ymax = ytrain.max()
-
-		Xtrain = Xtrain / Xmax
-		ytrain = ytrain / ymax
 
 		training(model, Xtrain, ytrain)
 		sla_model_op(model, "model")
@@ -95,16 +79,18 @@ def training(model, Xtrain, ytrain):
 	model.compile(loss='mean_absolute_percentage_error', optimizer=custom_optimizer)
 	model.fit(Xtrain, ytrain, epochs=epochs, batch_size=batch_size)
 
-def evalueer_model(model, X, y, Xmax=Xvmax, ymax=yvmax):
+def evalueer_model(model, X, y, keys):
     voorspellingen = model.predict(X)
-    voorspellingen *= Xvmax
-    y *= yvmax
+    print(len(voorspellingen))
+    for i in range(len(voorspellingen)):
+    	voorspellingen[i] *= keys[i]
+    	y[i] *= keys[i]
     mae = mean_absolute_error(y, voorspellingen)
     mse = mean_squared_error(y, voorspellingen)
     return mae, mse, voorspellingen
 
 get_training()
 model = load_model("model.keras")
-mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
+mae, mse, voorspellingen = evalueer_model(model, Xval, yval, keys)
 print("MAE: ", {mae})
 print("MSE: ", {mse})
