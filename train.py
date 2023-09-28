@@ -11,8 +11,10 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolu
 from tensorflow.keras.optimizers import Adam
 import subprocess
 import h5py
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+import pickle
 
-custom_optimizer = Adam(learning_rate=0.0005)
+custom_optimizer = Adam(learning_rate=0.0001)
 batch_size = 32
 epochs = 15
 aantal_candlesticks = 40
@@ -29,14 +31,16 @@ with h5py.File(Xpadnaam, "r") as file:
     Xtrain = file["Xtrain"][:]
     ytrain = file["ytrain"][:]
 
+input_shape = (Xtrain.shape[1], Xtrain.shape[2])
+output_shape = ytrain.shape[1]
+
 with h5py.File("val_data.h5", "r") as file:
     # Haal de datasets uit het bestand en laad ze in variabelen
     Xval = file["Xval"][:]
     yval = file["yval"][:]
-    keys = file["keys"][:]
 
-input_shape = (Xtrain.shape[1], Xtrain.shape[2])
-output_shape = ytrain.shape[1]
+with open('scaler.pickle', 'rb') as f:
+    scaler = pickle.load(f)
 
 def get_training(input_shape=input_shape):
 	model = laden_of_maken(input_shape)
@@ -46,10 +50,8 @@ def get_training(input_shape=input_shape):
 		Xpadnaam = os.path.join("trainingfolder", mapp, "training_data.h5")
 		print("Currently training on:",  mapp)
 		with h5py.File(Xpadnaam, "r") as file:
-		    # Haal de datasets uit het bestand en laad ze in variabelen
 		    Xtrain = file["Xtrain"][:]
 		    ytrain = file["ytrain"][:]
-
 		training(model, Xtrain, ytrain)
 		sla_model_op(model, "model")
 
@@ -79,18 +81,16 @@ def training(model, Xtrain, ytrain):
 	model.compile(loss='mean_absolute_percentage_error', optimizer=custom_optimizer)
 	model.fit(Xtrain, ytrain, epochs=epochs, batch_size=batch_size)
 
-def evalueer_model(model, X, y, keys):
+def evalueer_model(model, X, y):
     voorspellingen = model.predict(X)
-    print(len(voorspellingen))
-    for i in range(len(voorspellingen)):
-    	voorspellingen[i] *= keys[i]
-    	y[i] *= keys[i]
+    voorspellingen = scaler.inverse_transform(voorspellingen)
+    voorspellingen = scaler.inverse_transform(y)
     mae = mean_absolute_error(y, voorspellingen)
     mse = mean_squared_error(y, voorspellingen)
     return mae, mse, voorspellingen
 
 get_training()
 model = load_model("model.keras")
-mae, mse, voorspellingen = evalueer_model(model, Xval, yval, keys)
+mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
 print("MAE: ", {mae})
 print("MSE: ", {mse})
