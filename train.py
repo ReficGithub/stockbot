@@ -12,7 +12,6 @@ from tensorflow.keras.optimizers import Adam
 import subprocess
 import h5py
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
-import pickle
 
 custom_optimizer = Adam(learning_rate=0.0001)
 batch_size = 32
@@ -38,9 +37,6 @@ with h5py.File("val_data.h5", "r") as file:
     # Haal de datasets uit het bestand en laad ze in variabelen
     Xval = file["Xval"][:]
     yval = file["yval"][:]
-
-with open('scaler.pickle', 'rb') as f:
-    scaler = pickle.load(f)
 
 def get_training(input_shape=input_shape):
 	model = laden_of_maken(input_shape)
@@ -81,16 +77,5 @@ def training(model, Xtrain, ytrain):
 	model.compile(loss='mean_absolute_percentage_error', optimizer=custom_optimizer)
 	model.fit(Xtrain, ytrain, epochs=epochs, batch_size=batch_size)
 
-def evalueer_model(model, X, y):
-    voorspellingen = model.predict(X)
-    voorspellingen = scaler.inverse_transform(voorspellingen)
-    voorspellingen = scaler.inverse_transform(y)
-    mae = mean_absolute_error(y, voorspellingen)
-    mse = mean_squared_error(y, voorspellingen)
-    return mae, mse, voorspellingen
-
 get_training()
 model = load_model("model.keras")
-mae, mse, voorspellingen = evalueer_model(model, Xval, yval)
-print("MAE: ", {mae})
-print("MSE: ", {mse})
