@@ -15,7 +15,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 custom_optimizer = Adam(learning_rate=0.0001)
 batch_size = 32
-epochs = 15
+epochs = 100
 aantal_candlesticks = 40
 
 mappen = ['trainingfolder', 'AAPL']
@@ -49,7 +49,7 @@ def get_training(input_shape=input_shape):
 		    Xtrain = file["Xtrain"][:]
 		    ytrain = file["ytrain"][:]
 		training(model, Xtrain, ytrain)
-		sla_model_op(model, "model")
+	sla_model_op(model, "model")
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
