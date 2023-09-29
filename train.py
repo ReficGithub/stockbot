@@ -15,7 +15,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 custom_optimizer = Adam(learning_rate=0.0001)
 batch_size = 32
-epochs = 100
+epochs = 25
 aantal_candlesticks = 40
 
 mappen = ['trainingfolder', 'AAPL']
@@ -57,7 +57,7 @@ def bouw_lstm_netwerk(input_shape, output_shape):
     model.add(LSTM(1000, return_sequences=True))
     model.add(LSTM(1250, return_sequences=True))
     model.add(LSTM(750))
-	model.add(Dropout(0.15))
+    model.add(Dropout(0.15))
     model.add(Dense(output_shape))
     return model
 
