@@ -6,7 +6,7 @@ import random
 import os
 from datetime import datetime, timedelta
 from tensorflow.keras.models import load_model, Sequential
-from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.layers import LSTM, Dense, Dropout
 from sklearn.metrics import mean_absolute_error, mean_squared_error, mean_absolute_percentage_error
 from tensorflow.keras.optimizers import Adam
 import subprocess
@@ -56,7 +56,8 @@ def bouw_lstm_netwerk(input_shape, output_shape):
     model.add(LSTM(1250, return_sequences=True, input_shape=input_shape))
     model.add(LSTM(1000, return_sequences=True))
     model.add(LSTM(1250, return_sequences=True))
-    model.add(LSTM(750))   
+    model.add(LSTM(750))
+	model.add(Dropout(0.15))
     model.add(Dense(output_shape))
     return model
 
