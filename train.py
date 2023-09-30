@@ -53,11 +53,11 @@ def get_training(input_shape=input_shape):
 
 def bouw_lstm_netwerk(input_shape, output_shape):
     model = Sequential()
-    model.add(LSTM(1250, return_sequences=True, input_shape=input_shape))
-    model.add(LSTM(1000, return_sequences=True))
-    model.add(LSTM(1250, return_sequences=True))
-    model.add(LSTM(750, return_sequences=True))
-    model.add(LSTM(750))
+    model.add(LSTM(1250, dropout=0.001, return_sequences=True, input_shape=input_shape))
+    model.add(LSTM(1000, dropout=0.001, return_sequences=True))
+    model.add(LSTM(1250, dropout=0.001, return_sequences=True))
+    model.add(LSTM(750, dropout=0.001, return_sequences=True))
+    model.add(LSTM(750, dropout=0.001))
     model.add(Dense(output_shape))
     return model
 
