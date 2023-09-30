@@ -13,9 +13,9 @@ import subprocess
 import h5py
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
-custom_optimizer = Adam(learning_rate=0.0001)
+custom_optimizer = Adam(learning_rate=0.0005)
 batch_size = 32
-epochs = 25
+epochs = 15
 aantal_candlesticks = 40
 
 mappen = ['trainingfolder', 'AAPL']
@@ -56,8 +56,9 @@ def bouw_lstm_netwerk(input_shape, output_shape):
     model.add(LSTM(1250, return_sequences=True, input_shape=input_shape))
     model.add(LSTM(1000, return_sequences=True))
     model.add(LSTM(1250, return_sequences=True))
+    model.add(LSTM(750, return_sequences=True))
     model.add(LSTM(750))
-    model.add(Dropout(0.15))
+    model.add(Dropout(0.015))
     model.add(Dense(output_shape))
     return model
 
