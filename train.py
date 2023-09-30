@@ -13,7 +13,7 @@ import subprocess
 import h5py
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
-custom_optimizer = Adam(learning_rate=0.0005)
+custom_optimizer = Adam(learning_rate=0.005)
 batch_size = 32
 epochs = 15
 aantal_candlesticks = 40
